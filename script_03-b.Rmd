@@ -49,10 +49,45 @@ sep_new <-
 **Prompt:** Which classes had the biggest increases and decreases in undergraduate enrollments between September 1 and September 22? Obviously, you will need to join the two datasets which I have created for you above.
 
 a) Make a table using **gt** which shows the five courses with the biggest increase. Use the [How to make a table](https://davidkane9.github.io/PPBDS/tools.html#how-to-make-a-table) section of *The Primer*.
+```{r}
+sep_diff <-
+inner_join(sep_old, sep_new, by = "id", suffix = c("_old","")) %>%
+mutate(enrollment_diff =u_grad - u_grad_old) %>%
+select("id", "title", "name", "department", "u_grad_old", "u_grad", "enrollment_diff") %>%
+drop_na()%>%
+  arrange(desc(enrollment_diff)) %>%
+slice(1:5)
+sep_diff %>%
+  gt()
+```
+
+
 
 b) Make a table using **gt** which shows the five courses with the biggest decrease.
+```{r}
+sep_diff1 <-
+inner_join(sep_old, sep_new, by = "id", suffix = c("_old","")) %>%
+mutate(enrollment_diff =u_grad - u_grad_old) %>%
+select("id", "title", "name", "department", "u_grad_old", "u_grad", "enrollment_diff") %>%
+drop_na()%>%
+  arrange(enrollment_diff) %>%
+slice(1:5)
+
+sep_diff1 %>%
+  gt()
+```
+```
 
 c) Make a nice looking graphic which shows these 10 courses.
+```{r}
+sep_dif_total <- full_join(sep_diff, sep_diff1) %>%
+ ggplot(aes(x= title, y = enrollment_diff)) +
+ geom_col(aes(fill = department), color = "white") +
+ 
+ 
+sep_dif_total
+ 
+```
 
 d) Write down some thoughts about what might explain these increases and decreases. Or is it all just random? How would we know?
 
@@ -63,6 +98,9 @@ See [here](https://rpubs.com/dkane/week-3) for my answers. No need to copy exact
 ## Scene 2
 
 **Prompt:** Dean Amanda Claybaugh is worried that the amount of work that some classes assigned in the first few weeks of class. Describe an ideal Preceptor Table with no missing data which would allow us to investigate this situation. What data is missing and why? 
+```{r}
+
+```
 
 With our actual Preceptor Table, how might we investigate the effect of work assigned in the first two weeks? Would the estimated Average Treatment Effect be accurate? Why or why not?
 
